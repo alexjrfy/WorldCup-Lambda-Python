@@ -1,10 +1,6 @@
 from src.utils.customException import CustomException
 from http import HTTPStatus
-import logging
 import json
-
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     
@@ -23,8 +19,7 @@ def lambda_handler(event, context):
                     "Content-Type": "application/json"
                 },
                 'body': teamMatches
-            }
-            
+            }  
         else:
             raise CustomException({'errorMessage':'Invalid Team'})
     except Exception as ex:
@@ -35,6 +30,6 @@ def lambda_handler(event, context):
                 },
                 'body': ex.args
             }
-        
+       
     return json.dumps(OutputObj)
     
