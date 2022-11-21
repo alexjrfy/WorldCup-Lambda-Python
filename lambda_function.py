@@ -3,6 +3,8 @@ from http import HTTPStatus
 import logging
 import json
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     
@@ -15,16 +17,14 @@ def lambda_handler(event, context):
                 teamMatches.append(match)
         
         if len(teamMatches)>0:
-            jsonOutout = json.dumps(teamMatches)
             OutputObj = {
                 'statusCode': HTTPStatus.OK.value,
                 'headers':{
                     "Content-Type": "application/json"
                 },
-                'body': jsonOutout
+                'body': teamMatches
             }
-
-            return OutputObj
+            
         else:
             raise CustomException({'errorMessage':'Invalid Team'})
     except Exception as ex:
@@ -35,4 +35,6 @@ def lambda_handler(event, context):
                 },
                 'body': ex.args
             }
-    return OutputObj
+        
+    return json.dumps(OutputObj)
+    
