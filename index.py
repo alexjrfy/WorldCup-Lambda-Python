@@ -9,4 +9,4 @@ payload = {
     "team": team
 }
 
-print(lambda_handler(payload,''))
+print(lambda_handler(payload, ''))
