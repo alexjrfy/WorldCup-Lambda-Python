@@ -3,15 +3,15 @@ from http import HTTPStatus
 import json
 
 
-def lambda_handler(event, context):   
+def lambda_handler(event, context):
     OutputObj = []
     try:
-        
         teamMatches = []
         for match in event['list']:
-            if match['HomeTeam'] == event['team'] or match['AwayTeam'] == event['team']:
+            hTeam = match['HomeTeam']
+            mTeam = match['AwayTeam']
+            if hTeam == event['team'] or mTeam == event['team']:
                 teamMatches.append(match)
-        
         if len(teamMatches) > 0:
             OutputObj = {
                 'statusCode': HTTPStatus.OK.value,
@@ -19,7 +19,7 @@ def lambda_handler(event, context):
                     "Content-Type": "application/json"
                 },
                 'body': teamMatches
-            }  
+            }
         else:
             raise CustomException({'errorMessage': 'Invalid Team'})
     except Exception as ex:
