@@ -1,11 +1,14 @@
-from src.models.enumStatusCode import StatusCode
+from src.utils.customException import CustomException
+from http import HTTPStatus
 import logging
 import json
 
+
 def lambda_handler(event, context):
     
+    OutputObj = []
     try:
-        OutputObj = []
+        
         teamMatches = []
         for match in event['list']:
             if match['HomeTeam'] ==event['team'] or match['AwayTeam']==event['team']:
@@ -14,7 +17,7 @@ def lambda_handler(event, context):
         if len(teamMatches)>0:
             jsonOutout = json.dumps(teamMatches)
             OutputObj = {
-                'statusCode': StatusCode.BAD_REQUEST.value,
+                'statusCode': HTTPStatus.OK.value,
                 'headers':{
                     "Content-Type": "application/json"
                 },
@@ -23,4 +26,13 @@ def lambda_handler(event, context):
 
             return OutputObj
         else:
-            raise Exception('Invalid Team')
+            raise CustomException({'errorMessage':'Invalid Team'})
+    except Exception as ex:
+        OutputObj = {
+                'statusCode': HTTPStatus.BAD_REQUEST.value,
+                'headers':{
+                    "Content-Type": "application/json"
+                },
+                'body': ex.args
+            }
+    return OutputObj
